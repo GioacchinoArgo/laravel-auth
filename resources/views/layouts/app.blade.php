@@ -10,6 +10,11 @@
 
     <title>{{ config('app.name', 'Laravel') }} | @yield('title')</title>
 
+    <style>
+        body {
+            visibility: hidden;
+        }
+    </style>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -32,6 +37,8 @@
         @include('includes.layouts.navbar')
 
         <main class="container py-4">
+            @include('includes.alert')
+
             @yield('content')
         </main>
     </div>
