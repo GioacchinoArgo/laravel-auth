@@ -70,4 +70,13 @@
 
 @section('scripts')
     @vite('resources/js/delete_confirmation.js')
+
+    <script>
+        const titleField = document.getElementById('title');
+        const slugField = document.getElementById('slug');
+
+        titleField.addEventListener('blur', () => {
+            slugField.value =titleField.value;
+        })
+    </script>
 @endsection

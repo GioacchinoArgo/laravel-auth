@@ -1,15 +1,15 @@
 @if($project->exists)
-    <form action="{{ route('admin.projects.update', $project)}}" method="POST">
+    <form action="{{ route('admin.projects.update', $project)}}" method="POST" novalidate>
         @method('PUT')
 
 @else
-    <form action="{{ route('admin.projects.store', $project)}}">
+    <form action="{{ route('admin.projects.store')}}" method="POST" novalidate> 
 
 @endif
 
     @csrf
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <div class="mb-3">
                 <label for="title" class="form-label">Titolo</label>
                 <input type="text" name="title" class="form-control @error('title') is-invalid @elseif(old('title', '')) is-valid @enderror" id="title" placeholder="Titolo..." value="{{old('title', $project->title)}}" required>
@@ -22,6 +22,12 @@
                         Inserisci il titolo del post
                     </div>
                 @enderror
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="slug" class="form-label">Slug</label>
+                <input type="text" class="form-control" id="slug" value="{{ Str::slug(old('title', $project->title)) }}" disabled>
             </div>
         </div>
         <div class="col-12">
