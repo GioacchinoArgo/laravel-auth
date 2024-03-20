@@ -16,7 +16,13 @@
                 <th scope="col">Slug</th>
                 <th scope="col">Creato il</th>
                 <th scope="col">Ultima modifica</th>
-                <th></th>
+                <th>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{route('admin.projects.create')}}" class="btn btn-sm btn-success d">
+                            <i class="fas fa-plus me-2"></i>Crea progetto
+                        </a>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
 class ProjectController extends Controller
@@ -21,16 +23,38 @@ class ProjectController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    {   
+        $project = new Project();
+        return view('admin.projects.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $request->validate([
+            'title' => 'required|string|min:5|max:20|unique:projects',
+            'content' => 'required|string',
+        ], 
+        [
+            'title.required' => 'Il titolo è obbligatorio',
+            'title.min' => 'Il titolo deve essere almeno :min caratteri',
+            'title.max' => 'Il titolo deve essere di massimo :max caratteri',
+            'title.unique' => 'Esiste già un progetto con questo titolo',
+            'content.required' => 'La descrizione del progetto è obbligatoria'
+        ]);
+
+        $data = $request->all();
+
+        $project = new Project();
+
+        $project->fill($data);
+        $project->slug = Str::slug($project->title);
+
+        $project->save();
+
+        return to_route('admin.projects.show', $project)->with('message', 'Progetto creato con successo')->with('type', 'success');
     }
 
     /**
@@ -46,7 +70,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
@@ -54,7 +78,24 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', 'min:5', 'max:20', Rule::unique('projects')->ignore($project->id)],
+            'content' => 'required|string',
+        ], 
+        [
+            'title.required' => 'Il titolo è obbligatorio',
+            'title.min' => 'Il titolo deve essere almeno :min caratteri',
+            'title.max' => 'Il titolo deve essere di massimo :max caratteri',
+            'title.unique' => 'Esiste già un progetto con questo titolo',
+            'content.required' => 'La descrizione del progetto è obbligatoria'
+        ]);
+        $data = $request->all();
+
+        $project->fill($data);
+        $project->slug = Str::slug($project->title);
+        $project->save();
+
+        return to_route('admin.projects.show', $project)->with('message', 'Progetto creato con successo')->with('type', 'success');
     }
 
     /**
