@@ -1,7 +1,17 @@
 const placeholder = 'https://marcolanci.it/boolean/assets/placeholder.png';
-const input = document.getElementById('image');
-const preview = document.getElementById('preview')
+const imageField = document.getElementById('image');
+const previewField = document.getElementById('preview');
 
-input.addEventListener('input', () => {
-    preview.src = input.value || placeholder;
+imageField.addEventListener('change', () => {
+    if (imageField.files && imageField.files[0]) {
+
+        const file = imageField.files[0];
+
+        const blobUrl = URL.createObjectURL(file);
+
+        previewField.src = blobUrl;
+    }
+    else {
+        previewField.src = placeholder;
+    }
 })

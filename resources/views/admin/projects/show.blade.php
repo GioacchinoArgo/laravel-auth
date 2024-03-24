@@ -12,16 +12,15 @@
 
     <div class="clearfix">
         @if ($project->image)
-            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="me-2 float-start h-25 w-25">
+            <img src="{{ $project->printImage() }}" alt="{{ $project->title }}" class="me-2 float-start h-25 w-25">
         @endif
         <p>{{ $project->content}}</p>
         <div>
             <strong>Creato il:</strong> {{ $project->created_at }}
             <strong class="ms-4">Ultima modifica:</strong> {{ $project->updated_at }}
         </div>
-        <hr>
     </div>
-
+    <hr>
     <footer class="d-flex justify-content-between align-items-center">
         <a href="{{ route('admin.projects.index') }}" class="btn btn-primary"> Torna indietro</a>
 
@@ -42,4 +41,5 @@
 
 @section('scripts')
     @vite('resources/js/delete_confirmation.js')
+    @vite('resources/js/slug_preview.js')
 @endsection

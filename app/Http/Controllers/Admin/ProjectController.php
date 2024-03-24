@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
 
 class ProjectController extends Controller
 {
@@ -37,7 +39,7 @@ class ProjectController extends Controller
             [
                 'title' => 'required|string|min:5|max:20|unique:projects',
                 'content' => 'required|string',
-                'image' => 'nullable|url',
+                'image' => 'nullable|image|mimes:png,jpg,jpeg'
             ],
             [
                 'title.required' => 'Il titolo è obbligatorio',
@@ -45,7 +47,8 @@ class ProjectController extends Controller
                 'title.max' => 'Il titolo deve essere di massimo :max caratteri',
                 'title.unique' => 'Esiste già un progetto con questo titolo',
                 'content.required' => 'La descrizione del progetto è obbligatoria',
-                'image.url' => 'L\' indirizzo inserito non è valido'
+                'image.image' => 'Il file inserito non è un\'immagine',
+                'image.mimes' => 'Le estensioni valide sono: .png, .jpg, .jpeg'
             ]
         );
 
@@ -56,8 +59,14 @@ class ProjectController extends Controller
         $project->fill($data);
         $project->slug = Str::slug($project->title);
 
-        $project->save();
+        if (Arr::exists($data, 'image')) {
+            $extension = $data['image']->extension();
 
+            $img_url = Storage::putFileAs('project_images', $data['image'], "$project->slug.$extension");
+            $project->image = $img_url;
+        }
+
+        $project->save();
         return to_route('admin.projects.show', $project)->with('message', 'Progetto creato con successo')->with('type', 'success');
     }
 
@@ -86,7 +95,7 @@ class ProjectController extends Controller
             [
                 'title' => ['required', 'string', 'min:5', 'max:20', Rule::unique('projects')->ignore($project->id)],
                 'content' => 'required|string',
-                'image' => 'nullable|url'
+                'image' => 'nullable|image|mimes:png,jpg,jpeg'
             ],
             [
                 'title.required' => 'Il titolo è obbligatorio',
@@ -94,14 +103,24 @@ class ProjectController extends Controller
                 'title.max' => 'Il titolo deve essere di massimo :max caratteri',
                 'title.unique' => 'Esiste già un progetto con questo titolo',
                 'content.required' => 'La descrizione del progetto è obbligatoria',
-                'image.url' => 'L\' indirizzo inserito non è valido'
+                'image.image' => 'Il file inserito non è un\'immagine',
+                'image.mimes' => 'Le estensioni valide sono: .png, .jpg, .jpeg'
             ]
         );
         $data = $request->all();
 
         $project->fill($data);
         $project->slug = Str::slug($project->title);
-        $project->save();
+
+        if (Arr::exists($data, 'image')) {
+            if ($project->image) Storage::delete($project->image);
+            $extension = $data['image']->extension();
+
+            $img_url = Storage::putFileAs('project_images', $data['image'], "$project->slug.$extension");
+            $project->image = $img_url;
+        }
+
+        $project->update($data);
 
         return to_route('admin.projects.show', $project)->with('message', 'Progetto creato con successo')->with('type', 'success');
     }
@@ -131,6 +150,7 @@ class ProjectController extends Controller
 
     public function drop(Project $project)
     {
+        if ($project->image) Storage::delete($project->image);
         $project->forceDelete();
 
         return to_route('admin.projects.trash')->with('type', 'warning')->with('message', 'Progetto eliminato definitivamente');
