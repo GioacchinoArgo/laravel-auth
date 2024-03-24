@@ -16,14 +16,15 @@ class ProjectFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {   
+    {
 
         $title = fake()->text(20);
 
         return [
             'title' => $title,
             'slug' => Str::slug($title),
-            'content' => fake()->paragraphs(20, true)
+            'content' => fake()->paragraphs(20, true),
+            'image' => fake()->imageUrl(250, 250, true)
         ];
     }
 }

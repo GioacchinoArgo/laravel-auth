@@ -7,10 +7,14 @@
     <header>
         <h1 class="mb-3"> {{ $project->title}} </h1>
     </header>
+
     <hr>
-    <div>
+
+    <div class="clearfix">
+        @if ($project->image)
+            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="me-2 float-start">
+        @endif
         <p>{{ $project->content}}</p>
-        
         <div>
             <strong>Creato il:</strong> {{ $project->created_at }}
             <strong class="ms-4">Ultima modifica:</strong> {{ $project->updated_at }}

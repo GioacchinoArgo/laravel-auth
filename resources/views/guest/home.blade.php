@@ -20,6 +20,9 @@
         </div>
         <div class="card-body">
             <div class="row">
+                <div class="col-3 text-center">
+                    <img src="{{ $project->image }}" alt="{{ $project->title }}">
+                </div>
                 <div class="col">
                     <h5 class="card-title">{{ $project->title}}</h5>
                     <h6 class="card-subtitle my-3 text-body-secondary">{{ $project->created_at}}</h6>
