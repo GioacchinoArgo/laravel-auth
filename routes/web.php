@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Guest\HomeController as GuestHomeController;
-use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Guest\ProjectController as GuestProjectController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,20 +20,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', GuestHomeController::class)->name('guest.home');
 
+Route::get('/projects/{slug}', [GuestProjectController::class, 'show'])->name('guest.projects.show');
+
 Route::prefix('/admin')->name('admin.')->middleware('auth')->group(function () {
     //# Rotta admin Home
     Route::get('', AdminHomeController::class)->name('home');
 
     //# Rotte admin projects
-    Route::resource('projects', ProjectController::class);
+    Route::resource('projects', AdminProjectController::class);
 });
 
 
-    //# Rotte profilo
+//# Rotte profilo
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

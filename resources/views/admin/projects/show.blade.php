@@ -12,7 +12,7 @@
 
     <div class="clearfix">
         @if ($project->image)
-            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="me-2 float-start">
+            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="me-2 float-start h-25 w-25">
         @endif
         <p>{{ $project->content}}</p>
         <div>

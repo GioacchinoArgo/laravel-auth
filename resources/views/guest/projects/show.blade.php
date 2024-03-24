@@ -1,23 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Project')
 
 @section('content')
 
-    <header>
-        <h1>Portfolio</h1>
-        @if($projects->hasPages())
-            {{ $projects->links() }}
-        @endif
-    </header>
-
-    <hr>
-
-    @forelse ($projects as $project)
     <div class="card mt-4">
-        <div class="card-header d-flex align-items-center justify-content-between">
+        <div class="card-header">
             {{ $project->title}}
-            <a href="{{route('guest.projects.show', $project->slug)}}" class="btn btn-sm btn-primary ">Vedi</a>
         </div>
         <div class="card-body">
             <div class="row">
@@ -34,7 +23,4 @@
             </div>
         </div>
     </div>
-    @empty
-        <h3 class="text-center">Non ci sono progetti</h3>   
-    @endforelse
 @endsection
