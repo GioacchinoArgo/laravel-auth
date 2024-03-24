@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', GuestHomeController::class)->name('guest.home');
 
+//# Rotta guest show 
 Route::get('/projects/{slug}', [GuestProjectController::class, 'show'])->name('guest.projects.show');
 
 Route::prefix('/admin')->name('admin.')->middleware('auth')->group(function () {
@@ -27,6 +28,11 @@ Route::prefix('/admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('', AdminHomeController::class)->name('home');
 
     //# Rotte admin projects
+    Route::get('/projects/trash', [AdminProjectController::class, 'trash'])->name('projects.trash');
+    Route::patch('/projects/{project}/restore', [AdminProjectController::class, 'restore'])->name('projects.restore')->withTrashed();
+    Route::delete('/projects/{project}/drop', [AdminProjectController::class, 'drop'])->name('projects.drop')->withTrashed();
+
+
     Route::resource('projects', AdminProjectController::class);
 });
 

@@ -5,7 +5,8 @@
 @section('content')
 
     <header class="d-flex justify-content-between align-items-center">
-        <h1>Progetti</h1>
+        <h1>Progetti eliminati</h1>
+        <a href="{{ route('admin.projects.index') }}" class="btn btn-primary">Torna indietro</a>
     </header>
 
     <table class="table table-striped">
@@ -17,15 +18,6 @@
                 <th scope="col">Creato il</th>
                 <th scope="col">Ultima modifica</th>
                 <th>
-                    <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('admin.projects.trash') }}" class="btn btn-sm btn-secondary">
-                            <i class="fa-solid fa-trash"></i>
-                            Vedi cestino
-                        </a>
-                        <a href="{{route('admin.projects.create')}}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus me-2"></i>Crea progetto
-                        </a>
-                    </div>
                 </th>
             </tr>
         </thead>
@@ -39,18 +31,19 @@
                 <td>{{$project->updated_at}}</td>
                 <td>
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{route('admin.projects.show', $project)}}" class="btn btn-sm btn-primary">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-
-                        <a href="{{ route('admin.projects.edit', $project)}}" class="btn btn-sm btn-warning">
-                            <i class="fa-solid fa-pencil"></i>
-                        </a>
-                        <form action="{{route('admin.projects.destroy', $project->id)}}" method="POST" class="delete-form">
-                        @csrf 
-                        @method('DELETE')
+                        <form action="{{route('admin.projects.drop', $project->id)}}" method="POST" class="delete-form">
+                            @csrf 
+                            @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">
                                 <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+
+                        <form action="{{route('admin.projects.restore', $project->id)}}" method="POST">
+                            @csrf 
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="fas fa-arrows-rotate"></i>
                             </button>
                         </form>
                     </div>
@@ -58,18 +51,13 @@
             </tr>
         @empty 
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     <h3 class="text-center">Non ci sono progetti</h3>
                 </td>
             </tr>
         @endforelse
         </tbody>
     </table>
-
-    @if($projects->hasPages())
-        {{ $projects->links() }}
-    @endif
-
 @endsection
 
 @section('scripts')
