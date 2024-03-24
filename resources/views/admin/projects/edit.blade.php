@@ -11,5 +11,5 @@
     <hr>
 
     @include('includes.projects.form')
-
+    @vite('resources/js/slug_preview.js')
 @endsection

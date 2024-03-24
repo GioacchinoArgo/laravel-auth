@@ -23,7 +23,7 @@ class ProjectController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {   
+    {
         $project = new Project();
         return view('admin.projects.create', compact('project'));
     }
@@ -32,18 +32,22 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
-        $request->validate([
-            'title' => 'required|string|min:5|max:20|unique:projects',
-            'content' => 'required|string',
-        ], 
-        [
-            'title.required' => 'Il titolo è obbligatorio',
-            'title.min' => 'Il titolo deve essere almeno :min caratteri',
-            'title.max' => 'Il titolo deve essere di massimo :max caratteri',
-            'title.unique' => 'Esiste già un progetto con questo titolo',
-            'content.required' => 'La descrizione del progetto è obbligatoria'
-        ]);
+    {
+        $request->validate(
+            [
+                'title' => 'required|string|min:5|max:20|unique:projects',
+                'content' => 'required|string',
+                'image' => 'nullable|url',
+            ],
+            [
+                'title.required' => 'Il titolo è obbligatorio',
+                'title.min' => 'Il titolo deve essere almeno :min caratteri',
+                'title.max' => 'Il titolo deve essere di massimo :max caratteri',
+                'title.unique' => 'Esiste già un progetto con questo titolo',
+                'content.required' => 'La descrizione del progetto è obbligatoria',
+                'image.url' => 'L\' indirizzo inserito non è valido'
+            ]
+        );
 
         $data = $request->all();
 
@@ -78,17 +82,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        $request->validate([
-            'title' => ['required', 'string', 'min:5', 'max:20', Rule::unique('projects')->ignore($project->id)],
-            'content' => 'required|string',
-        ], 
-        [
-            'title.required' => 'Il titolo è obbligatorio',
-            'title.min' => 'Il titolo deve essere almeno :min caratteri',
-            'title.max' => 'Il titolo deve essere di massimo :max caratteri',
-            'title.unique' => 'Esiste già un progetto con questo titolo',
-            'content.required' => 'La descrizione del progetto è obbligatoria'
-        ]);
+        $request->validate(
+            [
+                'title' => ['required', 'string', 'min:5', 'max:20', Rule::unique('projects')->ignore($project->id)],
+                'content' => 'required|string',
+                'image' => 'nullable|url'
+            ],
+            [
+                'title.required' => 'Il titolo è obbligatorio',
+                'title.min' => 'Il titolo deve essere almeno :min caratteri',
+                'title.max' => 'Il titolo deve essere di massimo :max caratteri',
+                'title.unique' => 'Esiste già un progetto con questo titolo',
+                'content.required' => 'La descrizione del progetto è obbligatoria',
+                'image.url' => 'L\' indirizzo inserito non è valido'
+            ]
+        );
         $data = $request->all();
 
         $project->fill($data);

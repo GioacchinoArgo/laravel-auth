@@ -47,7 +47,26 @@
                 @enderror
             </div>
         </div>
-        <div class="col-12"></div>
+        <div class="col-11">
+            <div class="mb-3">
+                <label for="image" class="form-label">Immagine</label>
+                <input type="url" class="form-control @error('image') is-invalid @elseif(old('image', '')) is-valid @enderror" name="image" id="image" placeholder="http://... o https://..." value="{{ old('image', '')}}">
+                @error('image')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @else
+                        <div class="form-text">
+                            inserisci l'url di un file immagine
+                        </div>
+                @enderror
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="mb-3">
+                <img src="{{old('image', $post->image ?? 'https://marcolanci.it/boolean/assets/placeholder.png')}}" class="img-fluid" alt="immagine post" id="preview">
+            </div>
+        </div>
     </div>
     <hr>
     <div class="d-flex align-items-center justify-content-between">
